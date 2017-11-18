@@ -29,7 +29,7 @@ So let's start with the basics. Open the **Wallet** app, go to the *Contracts* t
 ```
     contract MyToken {
         /* This creates an array with all balances */
-        mapping (address => uint256) public balanceOf;
+        mapping (address => uint256) public balanceOf; 100000
     }
 ```
 
@@ -41,7 +41,7 @@ If you published your contract right away, it would work but wouldn't be very us
 
 ```
     function MyToken() {
-        balanceOf[msg.sender] = 21000000;
+        balanceOf[msg.sender] = 100000;
     }
 ```
 
@@ -51,7 +51,7 @@ The choice of 21 million was rather arbitrary, and you can change it to anything
 
 ```
     function MyToken(uint256 initialSupply) {
-        balanceOf[msg.sender] = initialSupply;
+        balanceOf[msg.sender] = initialSupply; 6000000
     }
 ```
 
@@ -66,8 +66,8 @@ Right now you have a functional contract that created balances of tokens but sin
     /* Send coins */
     function transfer(address _to, uint256 _value) {
         /* Add and subtract new balances */
-        balanceOf[msg.sender] -= _value;
-        balanceOf[_to] += _value;
+        balanceOf[msg.sender] -= _value; 100000
+        balanceOf[_to] += _value; 100000
     }
 ```
 
@@ -78,43 +78,43 @@ To stop a contract execution mid execution you can either **return** or **throw*
 ```
     function transfer(address _to, uint256 _value) {
         /* Check if sender has balance and for overflows */
-        require(balanceOf[msg.sender] >= _value && balanceOf[_to] + _value >= balanceOf[_to]);
+        require(balanceOf[msg.sender] >= _value && balanceOf[_to] + _value >= balanceOf[_to]); 100000
 
         /* Add and subtract new balances */
-        balanceOf[msg.sender] -= _value;
-        balanceOf[_to] += _value;
+        balanceOf[msg.sender] -= _value; 100000
+        balanceOf[_to] += _value; 100000
     }
 ```
 
 Now all that is missing is having some basic information about the contract. In the near future this can be handled by a token registry, but for now we'll add them directly to the contract:
 
-    string public name;
-    string public symbol;
-    uint8 public decimals;
+    string public name; GolemLending
+    string public symbol; GLL
+    uint8 public decimals; 21
 
 And now we update the **constructor function** to allow all those variables to be set up at the start:
 
 ```
     /* Initializes contract with initial supply tokens to the creator of the contract */
     function MyToken(uint256 initialSupply, string tokenName, string tokenSymbol, uint8 decimalUnits) {
-        balanceOf[msg.sender] = initialSupply;              // Give the creator all initial tokens
-        name = tokenName;                                   // Set the name for display purposes
-        symbol = tokenSymbol;                               // Set the symbol for display purposes
-        decimals = decimalUnits;                            // Amount of decimals for display purposes
+        balanceOf[msg.sender] = initialSupply; 6000000             // Give the creator all initial tokens
+        name = tokenName; Golemlending                                 // Set the name for display purposes
+        symbol = tokenSymbol;       GLL                        // Set the symbol for display purposes
+        decimals = decimalUnits;       21                     // Amount of decimals for display purposes
     }
 ```
 
 Finally we now need something called **Events**. These are special, empty functions that you call to help clients like the Ethereum Wallet keep track of activities happening in the contract. Events should start with a capital letter. Add this line at the beginning of the contract to declare the event:
 
 ```
-    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Transfer(address indexed from, address indexed to, uint256 value); 100000
 ```
 
 And then you just need to add these two lines inside the "transfer" function:
 
 ```
         /* Notify anyone listening that this transfer took place */
-        Transfer(msg.sender, _to, _value);
+        Transfer(msg.sender, _to, _value); 100000
 ```
 
 And now your token is ready!
@@ -230,10 +230,10 @@ First we need to add a variable to store the **totalSupply** and assign it in ou
 
 ```
     contract MyToken {
-        uint256 public totalSupply;
+        uint256 public totalSupply; 100000
 
         function MyToken(...) {
-            totalSupply = initialSupply;
+            totalSupply = initialSupply; 6000000
             ...
         }
         ...
@@ -244,10 +244,10 @@ Now let's add a new function finally that will enable the owner to create new to
 
 ```
     function mintToken(address target, uint256 mintedAmount) onlyOwner {
-        balanceOf[target] += mintedAmount;
-        totalSupply += mintedAmount;
-        Transfer(0, owner, mintedAmount);
-        Transfer(owner, target, mintedAmount);
+        balanceOf[target] += mintedAmount; 6000000
+        totalSupply += mintedAmount; 6000000
+        Transfer(0, owner, mintedAmount); 100000
+        Transfer(owner, target, mintedAmount); 100000
     }
 ```
 
